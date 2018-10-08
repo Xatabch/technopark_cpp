@@ -87,12 +87,14 @@ int add_row(char *(**matrix), char *string, size_t n) {
             }
             else
             {
-                error = ALLOCATE_MEMORY_ERROR;
+                free_matrix((*matrix), (n-1));
+                return ALLOCATE_MEMORY_ERROR;
             }
         }
         else
         {
-            error = ALLOCATE_MEMORY_ERROR;
+                free_matrix((*matrix), (n-1));
+                return ALLOCATE_MEMORY_ERROR;
         }
     }
     else
@@ -109,7 +111,9 @@ int add_row(char *(**matrix), char *string, size_t n) {
                 }
                 else
                 {
-                    error = ALLOCATE_MEMORY_ERROR;
+                    free_matrix((*matrix), (n-1));
+                    free_matrix(tmp, n);
+                    return ALLOCATE_MEMORY_ERROR;
                 }
             }
             
@@ -120,7 +124,9 @@ int add_row(char *(**matrix), char *string, size_t n) {
             }
             else
             {
-                error = ALLOCATE_MEMORY_ERROR;
+                free_matrix((*matrix), (n-1));
+                free_matrix(tmp, n);
+                return ALLOCATE_MEMORY_ERROR;
             }
             
             free_matrix((*matrix), (n-1));
@@ -137,18 +143,24 @@ int add_row(char *(**matrix), char *string, size_t n) {
                     }
                     else
                     {
-                        error = ALLOCATE_MEMORY_ERROR;
+                        free_matrix((*matrix), (n-1));
+                        free_matrix(tmp, n);
+                        return ALLOCATE_MEMORY_ERROR;
                     }
                 }
             }
             else
             {
-                error = ALLOCATE_MEMORY_ERROR;
+                    free_matrix((*matrix), (n-1));
+                    free_matrix(tmp, n);
+                    return ALLOCATE_MEMORY_ERROR;
             }
         }
         else
         {
-            error = ALLOCATE_MEMORY_ERROR;
+            free_matrix((*matrix), (n-1));
+            free_matrix(tmp, n);
+            return ALLOCATE_MEMORY_ERROR;
         }
         free_matrix(tmp, n);
     }
@@ -171,34 +183,33 @@ int is_string_balance(char *string) {
     int count = 0;
     int res = 0;
     
-    if(string != NULL)
+    if(string == NULL) {return res;}
+
+    for(int i = 0; i < len; i++)
     {
-        for(int i = 0; i < len; i++)
+        if(string[i] == '(')
         {
-            if(string[i] == '(')
+            push(&head, string[i]);
+            count++;
+        }
+        if(string[i] == ')')
+        {
+            count++;
+            if(is_empty(head))
             {
-                push(&head, string[i]);
-                count++;
+                return OK;
             }
-            if(string[i] == ')')
+            top = pop(&head);
+            if((top == '(' && string[i] != ')'))
             {
-                count++;
-                if(is_empty(head))
-                {
-                    return OK;
-                }
-                top = pop(&head);
-                if((top == '(' && string[i] != ')'))
-                {
-                    return OK;
-                }
+                return OK;
             }
         }
+    }
         
         res = is_empty(head);
         
         destroy_matrix(&head);
-    }
     
     return res;
 }
