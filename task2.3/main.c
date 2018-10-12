@@ -1,4 +1,5 @@
 /*
+Задача B-3. Парсер
 Требуется написать программу, которая способна вычислять арифметические выражения. 
 Выражения могут содержать: 
 1) знаки операций '+', '-', '/', '*' 
@@ -104,7 +105,7 @@ int is_ident_str(char *str)
     return flag;
 }
 
-bool shunting_yard(const char *input, char *output)
+bool parse(const char *input, char *output)
 {
     const char *strpos = input, *strend = input + strlen(input);
     char c = 0;
@@ -383,7 +384,7 @@ int readLine(char *buffer, char *(**matrix), size_t *n)
         {
             *n = *n + 1;
             buffer[i-1] = '\0';
-            error = add_row(&(*matrix), buffer, *n);
+            error = add_row(matrix, buffer, *n);
             i = 0;
             break;
         }
@@ -391,7 +392,7 @@ int readLine(char *buffer, char *(**matrix), size_t *n)
         {
             *n = *n + 1;
             buffer[i-1] = '\0';
-            error = add_row(&(*matrix), buffer, *n);
+            error = add_row(matrix, buffer, *n);
             i = 0;
         }
     }
@@ -404,7 +405,7 @@ int one_result(char *str, double *res)
     char output[128];
     int error = 0;
     
-    if(shunting_yard(str, output))
+    if(parse(str, output))
     {
         error = execution_order(output, res);
     }
